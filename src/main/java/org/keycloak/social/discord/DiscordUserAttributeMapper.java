@@ -19,7 +19,11 @@ package org.keycloak.social.discord;
 
 import com.google.auto.service.AutoService;
 import org.keycloak.broker.oidc.mappers.AbstractJsonUserAttributeMapper;
+import org.keycloak.broker.provider.BrokeredIdentityContext;
 import org.keycloak.broker.provider.IdentityProviderMapper;
+import org.keycloak.models.IdentityProviderMapperModel;
+import org.keycloak.models.KeycloakSession;
+import org.keycloak.models.RealmModel;
 
 /**
  * User attribute mapper.
@@ -40,5 +44,4 @@ public class DiscordUserAttributeMapper extends AbstractJsonUserAttributeMapper 
     public String getId() {
         return "discord-user-attribute-mapper";
     }
-
 }

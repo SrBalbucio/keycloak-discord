@@ -27,10 +27,12 @@ import org.keycloak.broker.provider.IdentityBrokerException;
 import org.keycloak.broker.provider.util.SimpleHttp;
 import org.keycloak.broker.social.SocialIdentityProvider;
 import org.keycloak.events.EventBuilder;
+import org.keycloak.models.Constants;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.services.ErrorPageException;
 import org.keycloak.services.messages.Messages;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -78,9 +80,10 @@ public class DiscordIdentityProvider extends AbstractOAuth2IdentityProvider<Disc
 
         user.setUsername(username);
         user.setEmail(getJsonProperty(profile, "email"));
+        if (user.getUserAttribute("locale") == null)
+            user.setUserAttribute("locale", getJsonProperty(profile, "locale"));
         user.setIdp(this);
 
-        System.out.println(profile.toString());
 
         AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, getConfig().getAlias());
 
