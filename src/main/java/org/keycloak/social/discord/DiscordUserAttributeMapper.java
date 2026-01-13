@@ -17,13 +17,16 @@
 
 package org.keycloak.social.discord;
 
+import com.google.auto.service.AutoService;
 import org.keycloak.broker.oidc.mappers.AbstractJsonUserAttributeMapper;
+import org.keycloak.broker.provider.IdentityProviderMapper;
 
 /**
  * User attribute mapper.
  *
  * @author dannyAAM
  */
+@AutoService(IdentityProviderMapper.class)
 public class DiscordUserAttributeMapper extends AbstractJsonUserAttributeMapper {
 
     private static final String[] cp = new String[]{DiscordIdentityProviderFactory.PROVIDER_ID};

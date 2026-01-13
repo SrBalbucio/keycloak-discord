@@ -80,6 +80,8 @@ public class DiscordIdentityProvider extends AbstractOAuth2IdentityProvider<Disc
         user.setEmail(getJsonProperty(profile, "email"));
         user.setIdp(this);
 
+        System.out.println(profile.toString());
+
         AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, getConfig().getAlias());
 
         return user;
@@ -90,7 +92,10 @@ public class DiscordIdentityProvider extends AbstractOAuth2IdentityProvider<Disc
         log.debug("doGetFederatedIdentity()");
         JsonNode profile = null;
         try {
-            profile = SimpleHttp.doGet(PROFILE_URL, session).header("Authorization", "Bearer " + accessToken).asJson();
+            profile = SimpleHttp
+                    .doGet(PROFILE_URL, session)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .asJson();
         } catch (Exception e) {
             throw new IdentityBrokerException("Could not obtain user profile from discord.", e);
         }
@@ -105,7 +110,10 @@ public class DiscordIdentityProvider extends AbstractOAuth2IdentityProvider<Disc
 
     protected boolean isAllowedGuild(String accessToken) {
         try {
-            JsonNode guilds = SimpleHttp.doGet(GROUP_URL, session).header("Authorization", "Bearer " + accessToken).asJson();
+            JsonNode guilds = SimpleHttp
+                    .doGet(GROUP_URL, session)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .asJson();
             Set<String> allowedGuilds = getConfig().getAllowedGuildsAsSet();
             for (JsonNode guild : guilds) {
                 String guildId = getJsonProperty(guild, "id");

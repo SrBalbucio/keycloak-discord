@@ -17,6 +17,7 @@
 
 package org.keycloak.social.discord;
 
+import com.google.auto.service.AutoService;
 import org.keycloak.broker.provider.AbstractIdentityProviderFactory;
 import org.keycloak.broker.social.SocialIdentityProviderFactory;
 import org.keycloak.models.IdentityProviderModel;
@@ -29,6 +30,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:wadahiro@gmail.com">Hiroyuki Wada</a>
  */
+@AutoService(SocialIdentityProviderFactory.class)
 public class DiscordIdentityProviderFactory extends AbstractIdentityProviderFactory<DiscordIdentityProvider>
         implements SocialIdentityProviderFactory<DiscordIdentityProvider> {
 
