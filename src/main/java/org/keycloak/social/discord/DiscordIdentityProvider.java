@@ -18,20 +18,22 @@
 package org.keycloak.social.discord;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.core.Response;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
 import org.jboss.logging.Logger;
 import org.keycloak.broker.oidc.AbstractOAuth2IdentityProvider;
 import org.keycloak.broker.oidc.mappers.AbstractJsonUserAttributeMapper;
 import org.keycloak.broker.provider.BrokeredIdentityContext;
 import org.keycloak.broker.provider.IdentityBrokerException;
-import org.keycloak.broker.provider.util.SimpleHttp;
 import org.keycloak.broker.social.SocialIdentityProvider;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.services.ErrorPageException;
 import org.keycloak.services.messages.Messages;
 
-import java.util.Map;
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -41,6 +43,7 @@ public class DiscordIdentityProvider extends AbstractOAuth2IdentityProvider<Disc
         implements SocialIdentityProvider<DiscordIdentityProviderConfig> {
 
     private static final Logger log = Logger.getLogger(DiscordIdentityProvider.class);
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public static final String AUTH_URL = "https://discord.com/oauth2/authorize";
     public static final String TOKEN_URL = "https://discord.com/api/oauth2/token";
@@ -91,12 +94,9 @@ public class DiscordIdentityProvider extends AbstractOAuth2IdentityProvider<Disc
     @Override
     protected BrokeredIdentityContext doGetFederatedIdentity(String accessToken) {
         log.debug("doGetFederatedIdentity()");
-        JsonNode profile = null;
+        JsonNode profile;
         try {
-            profile = SimpleHttp
-                    .doGet(PROFILE_URL, session)
-                    .header("Authorization", "Bearer " + accessToken)
-                    .asJson();
+            profile = fetchJson(PROFILE_URL, accessToken);
         } catch (Exception e) {
             throw new IdentityBrokerException("Could not obtain user profile from discord.", e);
         }
@@ -111,10 +111,7 @@ public class DiscordIdentityProvider extends AbstractOAuth2IdentityProvider<Disc
 
     protected boolean isAllowedGuild(String accessToken) {
         try {
-            JsonNode guilds = SimpleHttp
-                    .doGet(GROUP_URL, session)
-                    .header("Authorization", "Bearer " + accessToken)
-                    .asJson();
+            JsonNode guilds = fetchJson(GROUP_URL, accessToken);
             Set<String> allowedGuilds = getConfig().getAllowedGuildsAsSet();
             for (JsonNode guild : guilds) {
                 String guildId = getJsonProperty(guild, "id");
@@ -126,6 +123,16 @@ public class DiscordIdentityProvider extends AbstractOAuth2IdentityProvider<Disc
         } catch (Exception e) {
             throw new IdentityBrokerException("Could not obtain guilds the current user is a member of from discord.", e);
         }
+    }
+
+    protected JsonNode fetchJson(String url, String accessToken) throws IOException {
+        Connection.Response response = Jsoup.connect(url)
+                .ignoreContentType(true)
+                .header("Authorization", "Bearer " + accessToken)
+                .header("Accept", "application/json")
+                .execute();
+
+        return OBJECT_MAPPER.readTree(response.body());
     }
 
     @Override

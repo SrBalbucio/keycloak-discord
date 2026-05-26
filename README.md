@@ -1,4 +1,4 @@
-# keycloak-discord
+# Keycloak Discord
 
 Keycloak Social Login extension for Discord.
 
@@ -29,13 +29,12 @@ Note: You don't need to setup the theme in `master` realm from v0.3.0.
 Clone this repository and run `mvn package`.
 You can see `keycloak-discord-<version>.jar` under `target` directory.
 
-
 ## Licence
 
 [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
-
 ## Author
 
 - [Hiroyuki Wada](https://github.com/wadahiro)
+- [SrBalbucio](https://github.com/SrBalbucio)
 

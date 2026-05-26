@@ -5,13 +5,13 @@
     <description/>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.keycloak.extensions</groupId>
+    <groupId>net.hyperpowered.keycloak</groupId>
     <artifactId>keycloak-discord</artifactId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
     <packaging>jar</packaging>
 
     <properties>
-        <version.keycloak>26.5.0</version.keycloak>
+        <version.keycloak>26.6.2</version.keycloak>
     </properties>
 
     <dependencies>
@@ -39,6 +39,14 @@
             <scope>provided</scope>
             <version>${version.keycloak}</version>
         </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.22.2</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -55,6 +63,21 @@
     </dependencies>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>
