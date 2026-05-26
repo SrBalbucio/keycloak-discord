@@ -27,7 +27,6 @@ import org.keycloak.broker.provider.IdentityBrokerException;
 import org.keycloak.broker.provider.util.SimpleHttp;
 import org.keycloak.broker.social.SocialIdentityProvider;
 import org.keycloak.events.EventBuilder;
-import org.keycloak.models.Constants;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.services.ErrorPageException;
 import org.keycloak.services.messages.Messages;
@@ -83,7 +82,6 @@ public class DiscordIdentityProvider extends AbstractOAuth2IdentityProvider<Disc
         if (user.getUserAttribute("locale") == null)
             user.setUserAttribute("locale", getJsonProperty(profile, "locale"));
         user.setIdp(this);
-
 
         AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, getConfig().getAlias());
 
